@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField] private float moveSpeed = 5f;
 	[SerializeField] private int health = 3;
 	[SerializeField] private float padding = 1f;
+	[SerializeField] private int bombs = 3;
 	private float xMin;
 	private float xMax;
 	private float yMin;
