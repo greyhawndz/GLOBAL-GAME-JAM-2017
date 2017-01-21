@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerController : MonoBehaviour {
 
 	[SerializeField] private float moveSpeed = 5f;
@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour {
 
 	private void shoot(){
 			Debug.Log ("pew pew pew");
-			bulletObject = (GameObject)Instantiate (bulletPrefab, new Vector3(this.transform.position.x, this.transform.position.y, bulletPrefab.transform.position.z), Quaternion.identity);
+			bulletObject = (GameObject)Instantiate (bulletPrefab, new Vector3(this.transform.position.x, this.transform.position.y + 0.4f, bulletPrefab.transform.position.z), Quaternion.identity);
 			Rigidbody2D bulletBody = bulletObject.GetComponent<Rigidbody2D>();
 		bulletBody.velocity = new Vector3 (0, bulletSpeed, bulletObject.transform.position.z);
 	}
@@ -140,5 +140,12 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	public int getBombCount(){
+		return bombs;
+	}
+
+	public int getPlayerHealth(){
+		return health;
+	}
 
 }
