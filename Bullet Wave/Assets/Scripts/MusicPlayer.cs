@@ -24,6 +24,7 @@ public class MusicPlayer : MonoBehaviour {
 			music.Play ();
 		}
 	}
+		
 
 	void OnLevelWasLoaded(int level){
 		if (music != null) {
@@ -45,14 +46,24 @@ public class MusicPlayer : MonoBehaviour {
 
 	public void muteMusic(){
 		if (music != null) {
-			music.mute = true;
+			Debug.Log ("Mute music");
+			music.pitch = -0.9f;
+			//music.mute = true;
+			//music.volume = 0.3f;
 		}
 	}
 
 	public void unMuteMusic(){
 		if (music != null) {
-			music.mute = false;
+			Debug.Log ("Unmute Music");
+			music.pitch = 1f;
+			//music.mute = false;
+			//music.volume = 1f;
 		}
+	}
+
+	public static MusicPlayer getMusicPlayer(){
+		return musicPlayer;
 	}
 
 

@@ -12,16 +12,16 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField] private float bulletSpeed = 3f;
 	[SerializeField] private float fireRate = 5f;
 	[SerializeField] private float launchBombTime = 3f;
+	[SerializeField] private GameObject bombPrefab;
+	private GameObject bombObject;
 	private GameObject bulletObject;
 	private GameObject[] enemyBullets;
 	private float xMin;
 	private float xMax;
 	private float yMin;
 	private float yMax;
-	private MusicPlayer mPlayer;
 	// Use this for initialization
 	void Start () {
-		mPlayer = (MusicPlayer)GameObject.FindObjectOfType (typeof(MusicPlayer));
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftMost = Camera.main.ViewportToWorldPoint (new Vector3 (0, 0, distance));
 		Vector3 rightMost = Camera.main.ViewportToWorldPoint (new Vector3 (1, 0, distance));
@@ -106,10 +106,11 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void throwBomb(){
-		if (enemyBullets == null) {
+		
+	/*	if (enemyBullets == null) {
 			enemyBullets = GameObject.FindGameObjectsWithTag ("EnemyBullet");
 			Debug.Log ("Found " + enemyBullets.Length +" enemy bullets");
-		}
+		} 
 		if (bombs > 0) {
 			Debug.Log ("Bombs Away");
 			bombs -= 1;
@@ -120,16 +121,24 @@ public class PlayerController : MonoBehaviour {
 				Debug.Log ("Bullet destroyed");
 			}
 
-			mPlayer.muteMusic ();
-			Invoke ("unmute", 1f * Time.deltaTime);
+			MusicPlayer.getMusicPlayer ().muteMusic ();
+			MusicPlayer.getMusicPlayer ().Invoke ("unMuteMusic", 2);
 		} 
 		else {
 			Debug.Log ("You are out of bombs");
 		}
-
+	*/
+		if (bombs > 0) {
+			bombObject = (GameObject)Instantiate (bombPrefab, new Vector3 (this.transform.position.x, this.transform.position.y, bombPrefab.transform.position.z), Quaternion.identity);
+			bombs -= 1;
+			Debug.Log ("Bomb Count: " + bombs);
+			MusicPlayer.getMusicPlayer ().muteMusic ();
+			MusicPlayer.getMusicPlayer ().Invoke ("unMuteMusic", 2);
+		}
+		else {
+			Debug.Log ("You are out of bombs");
+		}
 	}
 
-	private void unmute(){
-		mPlayer.unMuteMusic ();
-	}
+
 }
