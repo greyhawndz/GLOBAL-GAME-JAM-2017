@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField] private float fireRate = 5f;
 	[SerializeField] private float launchBombTime = 3f;
 	[SerializeField] private GameObject bombPrefab;
+	[SerializeField] private AudioClip shotFX;
+	[SerializeField] private AudioClip hitFX;
+	[SerializeField] private AudioClip deathFX;
 	private GameObject bombObject;
 	private GameObject bulletObject;
 	private GameObject[] enemyBullets;
@@ -20,8 +23,10 @@ public class PlayerController : MonoBehaviour {
 	private float xMax;
 	private float yMin;
 	private float yMax;
+	private AudioSource src;
 	// Use this for initialization
 	void Start () {
+		src = this.GetComponent<AudioSource> ();
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftMost = Camera.main.ViewportToWorldPoint (new Vector3 (0, 0, distance));
 		Vector3 rightMost = Camera.main.ViewportToWorldPoint (new Vector3 (1, 0, distance));
@@ -53,10 +58,13 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void shoot(){
-			Debug.Log ("pew pew pew");
-			bulletObject = (GameObject)Instantiate (bulletPrefab, new Vector3(this.transform.position.x, this.transform.position.y + 0.4f, bulletPrefab.transform.position.z), Quaternion.identity);
-			Rigidbody2D bulletBody = bulletObject.GetComponent<Rigidbody2D>();
+		Debug.Log ("pew pew pew");
+		bulletObject = (GameObject)Instantiate (bulletPrefab, new Vector3(this.transform.position.x, this.transform.position.y + 0.4f, bulletPrefab.transform.position.z), Quaternion.identity);
+		Rigidbody2D bulletBody = bulletObject.GetComponent<Rigidbody2D>();
 		bulletBody.velocity = new Vector3 (0, bulletSpeed, bulletObject.transform.position.z);
+		src.clip = shotFX;
+		src.volume = 0.2f;
+		src.Play ();
 	}
 
 	private void moveShip(){
@@ -90,12 +98,18 @@ public class PlayerController : MonoBehaviour {
 
 	public void OnTriggerEnter2D(Collider2D collider){
 		Debug.Log ("Ouch");
-		Bullet enemyBullet = collider.gameObject.GetComponent<Bullet> ();
+		PlayerBullet enemyBullet = collider.gameObject.GetComponent<PlayerBullet> ();
 		if (enemyBullet) {
 			health -= 1;
 			Debug.Log ("Health left: " + health);
+			src.clip = hitFX;
+			src.volume = 0.8f;
+			src.Play ();
 			if (health <= 0) {
-				die ();
+				src.clip = deathFX;
+				src.volume = 0.8f;
+				src.Play ();
+				Invoke ("die", 0.3f);
 			}
 		}
 	}
