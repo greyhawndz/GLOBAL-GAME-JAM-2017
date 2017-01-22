@@ -14,8 +14,8 @@ public class Laser : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        state = STATE_CHARGE;
-        Invoke("shoot", chargeTime);
+		state = STATE_SHOOT;
+        Invoke("shoot", 0);
     }
 
     void shoot()

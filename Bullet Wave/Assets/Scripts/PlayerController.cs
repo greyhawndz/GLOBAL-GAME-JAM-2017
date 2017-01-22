@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour {
 
 	[SerializeField] private float moveSpeed = 5f;
@@ -102,14 +103,20 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void OnTriggerEnter2D(Collider2D collider){
-		Debug.Log ("Ouch");
-		PlayerBullet enemyBullet = collider.gameObject.GetComponent<PlayerBullet> ();
-		if (enemyBullet) {
+		string tag = collider.gameObject.tag;
+		if (tag == "EnemyBullet") {
+			Debug.Log ("Ouch");
 			health -= 1;
 			Debug.Log ("Health left: " + health);
 			src.clip = hitFX;
 			src.volume = 0.8f;
 			src.Play ();
+
+			GameObject[] list = GameObject.FindGameObjectsWithTag ("EnemyBullet");
+			for (int i = 0; i < list.Length; i++) {
+				Destroy (list [i].gameObject);
+			}
+
 			if (health <= 0) {
 				src.clip = deathFX;
 				src.volume = 0.8f;
@@ -123,6 +130,7 @@ public class PlayerController : MonoBehaviour {
 		Debug.Log ("RIP");
 		isDead = true;
 		anim.SetBool ("isDead", true);
+		SceneManager.LoadScene ("Menu");
 	}
 
 	private void throwBomb(){

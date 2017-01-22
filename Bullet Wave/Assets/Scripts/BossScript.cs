@@ -23,7 +23,7 @@ public class BossScript : MonoBehaviour
     {
         waitTime = Random.Range(waitTimeMin, waitTimeMax);
         targetPos = new Vector2(0, 0.5f);
-        Invoke("NextMove", 1.846f);
+		Invoke("NextMove", 3.696f);
     }
 
     // Update is called once per frame
@@ -38,7 +38,7 @@ public class BossScript : MonoBehaviour
         targetX = Random.Range(xMin, xMax);
         targetY = Random.Range(yMin, yMax);
         targetPos = new Vector2(targetX, targetY);
-        Invoke("NextMove", 1.846f);
+        Invoke("NextMove", 3.696f);
     }
 
     void Move()

@@ -18,7 +18,7 @@ public class Pulse : MonoBehaviour {
 
         startScale = this.transform.localScale;
         scale = startScale;
-        endScale = startScale + new Vector3(0.15f, 0.15f, 0.15f);
+        endScale = startScale + new Vector3(0.1f, 0.1f, 0.1f);
         Invoke("reset", frequency);
     }
 
