@@ -15,11 +15,16 @@ public class UIManager : MonoBehaviour {
 	void Update () {
 		player = FindObjectOfType<PlayerController> ();
 		if (player != null) {
-			if (player.getPlayerHealth () == 2 && hp3 != null) {
-				Destroy (hp3.gameObject);
-			} else if (player.getPlayerHealth () == 1 && hp2 != null) {
+			
+			if (player.getPlayerHealth() == 0 && hp1 != null) {
+				Destroy (hp1.gameObject);
+			}
+			else if (player.getPlayerHealth () == 1 && hp2 != null) {
 				Destroy (hp2.gameObject);
 			}
+			else if (player.getPlayerHealth () == 2 && hp3 != null) {
+				Destroy (hp3.gameObject);
+			} 
 
 			if (player.getBombCount () == 2 && bomb3 != null) {
 				Destroy (bomb3.gameObject);
@@ -29,11 +34,6 @@ public class UIManager : MonoBehaviour {
 				Destroy (bomb1.gameObject);
 			}
 		} 
-		else {
-			if (hp1 != null) {
-				Destroy (hp1.gameObject);
-			}
-		}
 	}
 
 

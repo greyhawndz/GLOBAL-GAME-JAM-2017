@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField] private AudioClip shotFX;
 	[SerializeField] private AudioClip hitFX;
 	[SerializeField] private AudioClip deathFX;
+	[SerializeField] private Animator anim;
 	private GameObject bombObject;
 	private GameObject bulletObject;
 	private GameObject[] enemyBullets;
@@ -24,9 +25,12 @@ public class PlayerController : MonoBehaviour {
 	private float yMin;
 	private float yMax;
 	private AudioSource src;
+	private bool isDead = false;
+	private Rigidbody2D playerBody;
 	// Use this for initialization
 	void Start () {
 		src = this.GetComponent<AudioSource> ();
+		playerBody = this.GetComponent<Rigidbody2D>();
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftMost = Camera.main.ViewportToWorldPoint (new Vector3 (0, 0, distance));
 		Vector3 rightMost = Camera.main.ViewportToWorldPoint (new Vector3 (1, 0, distance));
@@ -40,21 +44,22 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.Z)) {
-			InvokeRepeating ("shoot", 0f, fireRate);
+		if (!isDead) {
+			if (Input.GetKeyDown (KeyCode.Z)) {
+				InvokeRepeating ("shoot", 0f, fireRate);
+			}
+			if (Input.GetKeyUp (KeyCode.Z)) {
+				CancelInvoke ();
+			}
+			if (Input.GetKeyDown (KeyCode.X)) {
+				Invoke ("throwBomb", launchBombTime);
+			}
+			if (Input.GetKeyUp (KeyCode.X)) {
+				CancelInvoke ();
+			}
+			moveShip ();
+			slowDown ();
 		}
-		if (Input.GetKeyUp (KeyCode.Z)) {
-			CancelInvoke ();
-		}
-		if (Input.GetKeyDown (KeyCode.X)) {
-			Invoke ("throwBomb", launchBombTime);
-		}
-		if (Input.GetKeyUp (KeyCode.X)) {
-			CancelInvoke ();
-		}
-		moveShip ();
-		slowDown ();
-
 	}
 
 	private void shoot(){
@@ -109,39 +114,18 @@ public class PlayerController : MonoBehaviour {
 				src.clip = deathFX;
 				src.volume = 0.8f;
 				src.Play ();
-				Invoke ("die", 0.3f);
+				die ();
 			}
 		}
 	}
 
 	private void die(){
 		Debug.Log ("RIP");
-		Destroy (gameObject);
+		isDead = true;
+		anim.SetBool ("isDead", true);
 	}
 
 	private void throwBomb(){
-		
-	/*	if (enemyBullets == null) {
-			enemyBullets = GameObject.FindGameObjectsWithTag ("EnemyBullet");
-			Debug.Log ("Found " + enemyBullets.Length +" enemy bullets");
-		} 
-		if (bombs > 0) {
-			Debug.Log ("Bombs Away");
-			bombs -= 1;
-			Debug.Log ("Bomb count: " + bombs);
-
-			foreach (GameObject enemyBullet in enemyBullets) {
-				Destroy (enemyBullet);
-				Debug.Log ("Bullet destroyed");
-			}
-
-			MusicPlayer.getMusicPlayer ().muteMusic ();
-			MusicPlayer.getMusicPlayer ().Invoke ("unMuteMusic", 2);
-		} 
-		else {
-			Debug.Log ("You are out of bombs");
-		}
-	*/
 		if (bombs > 0) {
 			bombObject = (GameObject)Instantiate (bombPrefab, new Vector3 (this.transform.position.x, this.transform.position.y, bombPrefab.transform.position.z), Quaternion.identity);
 			bombs -= 1;
