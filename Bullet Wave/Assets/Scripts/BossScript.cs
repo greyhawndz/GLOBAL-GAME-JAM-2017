@@ -10,11 +10,14 @@ public class BossScript : MonoBehaviour
     public float xMax;
     public float yMin;
     public float yMax;
-
+	[SerializeField] private float health = 1000f;
+	[SerializeField] private LevelManager lvl;
+	[SerializeField] private Animator anim;
     private int waitTime;
     private float targetX;
     private float targetY;
     private Vector2 targetPos;
+
 
     public GameObject bulletSpawner;
 
@@ -30,6 +33,12 @@ public class BossScript : MonoBehaviour
     void Update()
     {
         Move();
+		if (health <= 1000) {
+			Debug.Log ("Boss Weak");
+			anim.SetBool ("isDamaged", true);
+
+		}
+
     }
 
     void NextMove()
@@ -45,4 +54,16 @@ public class BossScript : MonoBehaviour
     {
         transform.position = Vector2.MoveTowards(new Vector2(transform.position.x, transform.position.y), targetPos, speed * Time.deltaTime);
     }
+
+	public void OnTriggerEnter2D(Collider2D collider)
+	{	
+		if (collider.gameObject.tag == "Friendly Bullet") {
+			PlayerBullet bullet = collider.gameObject.GetComponent<PlayerBullet> ();
+			health -= bullet.getDamage ();
+			bullet.hit ();
+			if (health <= 0) {
+				lvl.loadLevel ("Menu");
+			}
+		}
+	}
 }

@@ -18,9 +18,12 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField] private AudioClip hitFX;
 	[SerializeField] private AudioClip deathFX;
 	[SerializeField] private Animator anim;
+	[SerializeField] private LevelManager lvl;
+	[SerializeField] private Text text;
 	private GameObject bombObject;
 	private GameObject bulletObject;
 	private GameObject[] enemyBullets;
+
 	private float xMin;
 	private float xMax;
 	private float yMin;
@@ -60,6 +63,12 @@ public class PlayerController : MonoBehaviour {
 			}
 			moveShip ();
 			slowDown ();
+		} 
+		else {
+			CancelInvoke ();
+			if (Input.GetKeyDown (KeyCode.R)) {
+				lvl.loadLevel ("Menu");
+			}
 		}
 	}
 
@@ -69,7 +78,7 @@ public class PlayerController : MonoBehaviour {
 		Rigidbody2D bulletBody = bulletObject.GetComponent<Rigidbody2D>();
 		bulletBody.velocity = new Vector3 (0, bulletSpeed, bulletObject.transform.position.z);
 		src.clip = shotFX;
-		src.volume = 0.2f;
+		src.volume = 0.8f;
 		src.Play ();
 	}
 
@@ -130,7 +139,10 @@ public class PlayerController : MonoBehaviour {
 		Debug.Log ("RIP");
 		isDead = true;
 		anim.SetBool ("isDead", true);
-		SceneManager.LoadScene ("Menu");
+		if (text != null) {
+			text.gameObject.SetActive (true);
+		}
+		
 	}
 
 	private void throwBomb(){

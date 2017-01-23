@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class PlayerBullet : MonoBehaviour {
 
-	[SerializeField] private int damage = 10;
+	[SerializeField] private float damage = 10f;
 
-	public void setDamage(int n){
+	public void setDamage(float n){
 		damage = n;
 	}
 
-	public int getDamage(){
+	public float getDamage(){
 		return damage;
 	}
 
